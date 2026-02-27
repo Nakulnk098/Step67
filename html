@@ -1,0 +1,264 @@
+from IPython.display import HTML
+
+html_content = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multimodal Misinformation Analyzer</title>
+    <style>
+        /* Base Styles & CSS Variables */
+        :root {
+            --primary: #4F46E5;
+            --secondary: #ec4899;
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --text: #f8fafc;
+            --text-muted: #cbd5e1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Typography */
+        h1, h2, h3 { line-height: 1.2; margin-bottom: 1rem; }
+        p { margin-bottom: 1rem; color: var(--text-muted); }
+        
+        /* Layout & Sections */
+        section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        /* Interactive Scroll Arrow */
+        .scroll-down {
+            margin-top: 50px;
+            font-size: 2rem;
+            color: var(--text);
+            text-decoration: none;
+            animation: bounce 2s infinite;
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--surface);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(79, 70, 229, 0.2);
+        }
+
+        /* Architecture Badges */
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            background: rgba(79, 70, 229, 0.2);
+            color: #818cf8;
+        }
+
+        /* Gradio Container */
+        .gradio-container {
+            width: 100%;
+            height: 800px;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: #fff; /* Gradio is light themed by default in your code */
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Scroll Animations (Intersection Observer targets) */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            will-change: opacity, visibility;
+        }
+
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* Keyframes */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="hero">
+        <h1>Detecting the Unseen.</h1>
+        <p>A multimodal approach to identifying fake news across social media using Text, Imagery, and Social Metadata.</p>
+        <a href="#problem" class="scroll-down">↓</a>
+    </header>
+
+    <section id="problem" class="fade-in-section">
+        <div class="grid-2">
+            <div>
+                <h2>The Problem: The Virality of Falsehoods</h2>
+                <p>In the digital age, misinformation spreads faster than truth. Malicious actors use sensational headlines out of context with benign text, manipulate images, and deploy bot networks to artificially inflate social engagement.</p>
+                <p>Traditional detection systems rely on text-only analysis, which fails to capture the nuance of modern social media posts where the <strong>context between the headline, the image, and the engagement metrics</strong> tells the real story.</p>
+            </div>
+            <div class="card">
+                <h3>Why Multimodal?</h3>
+                <ul style="list-style-position: inside; color: var(--text-muted); line-height: 2;">
+                    <li><strong>Clickbait:</strong> Headlines mismatch the article content.</li>
+                    <li><strong>Visual Manipulation:</strong> Images are altered or generated.</li>
+                    <li><strong>Astroturfing:</strong> Unnatural ratios of likes to reads.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="architecture" class="fade-in-section">
+        <h2 style="text-align: center; margin-bottom: 50px;">Our Pipeline Architecture</h2>
+        <div class="grid-4">
+            <div class="card">
+                <span class="badge">RoBERTa</span>
+                <h3>Text Risk Assessment</h3>
+                <p>We combine the Headline and Content into a specialized format (<code>&lt;title&gt; ... &lt;content&gt; ...</code>). RoBERTa analyzes the linguistic discrepancies and sentiment to generate a base risk score.</p>
+            </div>
+            
+            <div class="card">
+                <span class="badge">ViT (Vision Transformer)</span>
+                <h3>Visual Authenticity</h3>
+                <p>Using Google's ViT-base-patch16, the system processes associated imagery. It outputs probabilities regarding image manipulation, turning visual cues into a quantifiable risk metric.</p>
+            </div>
+
+            <div class="card">
+                <span class="badge">XGBoost</span>
+                <h3>The Final Judge</h3>
+                <p>A gradient boosted decision tree takes the AI-generated risk scores (Text & Image) and weighs them against social metadata (Engagement vs. Reads) to make a final, concrete classification.</p>
+            </div>
+
+            <div class="card">
+                <span class="badge">SHAP</span>
+                <h3>Explainable AI</h3>
+                <p>Black-box AI isn't enough. We use SHAP (SHapley Additive exPlanations) to break down exactly <em>why</em> the model made its decision, detailing the impact of each feature.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="demo" class="fade-in-section">
+        <h2 style="text-align: center;">Try the Analyzer</h2>
+        <p style="text-align: center; max-width: 600px; margin: 0 auto 40px auto;">Input a headline, article text, an optional image, and tweak the social metrics below to see the Multimodal Judge in action.</p>
+        
+        <div class="gradio-container">
+            <iframe src="http://127.0.0.1:7860" title="Gradio Misinformation Analyzer"></iframe>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            const sections = document.querySelectorAll('.fade-in-section');
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>
+"""
+
+HTML(html_content)
